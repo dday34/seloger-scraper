@@ -15,7 +15,17 @@
 (defn get-link [l]
   (-> l :attrs :href))
 
+(defn get-number-of-pages [url]
+  (->> (html/select (html/html-resource (:body (fetch-url url))) [:p.pagination_result_number])
+      first
+      :content
+      first
+      (re-seq #"[0-9]+")
+      second
+      Integer.))
+
 (defn get-listing-links [url]
+
   (map get-link (html/select (html/html-resource (:body (fetch-url url))) [:div.title :a])))
 
 (defn scrape-seloger-listings [url]
