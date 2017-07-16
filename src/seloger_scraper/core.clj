@@ -3,8 +3,11 @@
    [clojure.string :as string]
    [net.cgrand.enlive-html :as html]
    [org.httpkit.client :as http]
+   [sparkledriver.core :refer [with-browser make-browser close-browser!]]
    [seloger-scraper.listing :as listing])
   (:gen-class))
+
+(def browser (make-browser))
 
 (defn fetch-url [url]
   @(http/get url {:as :stream}))
@@ -18,7 +21,7 @@
 (defn scrape-seloger-listings [url]
   (let [listing-links (get-listing-links url)]
     (println "Start scraping " (count listing-links) " listings")
-    (map listing/scrape-listing listing-links)))
+    (map #(listing/scrape browser %) listing-links)))
 
 (defn get-city-id [city]
   (let [city-ids {"montpellier" "340172"}]

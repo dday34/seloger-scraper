@@ -1,10 +1,10 @@
 (ns seloger-scraper.listing
   (:require
-   [sparkledriver.core :refer [with-browser make-browser fetch! find-by-id find-by-xpath* text find-by-class]]))
+   [sparkledriver.core :refer [fetch! find-by-id text]]))
 
-(defn scrape-listing [url]
+(defn scrape [browser url]
   (println "scrape listing " url)
-  (with-browser [listing-page (fetch! (make-browser) url)]
+  (let [listing-page (fetch! browser url)]
     {:title (-> listing-page (find-by-id "js-titleAnnonce") text)
      :description (-> listing-page (find-by-id "js-descriptifBien") text)}))
 
