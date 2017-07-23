@@ -16,13 +16,18 @@
   (-> l :attrs :href))
 
 (defn get-number-of-pages [url]
-  (->> (html/select (html/html-resource (:body (fetch-url url))) [:p.pagination_result_number])
-      first
-      :content
-      first
-      (re-seq #"[0-9]+")
-      second
-      Integer.))
+  (let [pagination-element (html/select
+                            (html/html-resource (:body (fetch-url url)))
+                            [:p.pagination_result_number])]
+      (if-not (empty? pagination-element)
+        (->> pagination-element
+             first
+             :content
+             first
+             (re-seq #"[0-9]+")
+             second
+             Integer.)
+        1)))
 
 (defn get-listing-links [url]
 
@@ -38,7 +43,9 @@
       (get city-ids city)))
 
 (defn search [city max-price]
-  (scrape-seloger-listings (str "http://www.seloger.com/list.htm?tri=initial&idtypebien=2,1&idtt=2&ci=" (get-city-id city) "&pxmax=" max-price "&naturebien=1,2,4")))
+  (let [url (str "http://www.seloger.com/list.htm?tri=initial&idtypebien=2,1&idtt=2&ci=" (get-city-id city) "&pxmax=" max-price "&naturebien=1,2,4")]
+    (for [page (range 1 (inc (get-number-of-pages url)))]
+      (scrape-seloger-listings (str url "&LISTING-LISTpg=" page)))))
 
 (defn -main
   "I don't do a whole lot ... yet."
