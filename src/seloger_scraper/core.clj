@@ -1,6 +1,8 @@
 (ns seloger-scraper.core
   (:require
    [clojure.string :as string]
+   [clojure.tools.cli :refer [parse-opts]]
+   [clojure.tools.logging :as log]
    [net.cgrand.enlive-html :as html]
    [org.httpkit.client :as http]
    [sparkledriver.core :refer [with-browser make-browser close-browser!]]
@@ -35,11 +37,13 @@
 
 (defn scrape-seloger-listings [url output-file-name]
   (let [listing-links (get-listing-links url)]
-    (println "start scraping " (count listing-links) " listings")
+    (log/info "start scraping " (count listing-links) " listings")
     (map #(listing/scrape browser output-file-name %) listing-links)))
 
+(def cities {"montpellier" "340172"})
+
 (defn get-city-id [city]
-  (let [city-ids {"montpellier" "340172"}]
+  (let [city-ids cities]
       (get city-ids city)))
 
 (defn construct-seloger-url
@@ -48,12 +52,27 @@
    (str "http://www.seloger.com/list.htm?tri=initial&idtypebien=2,1&idtt=2&ci=" (get-city-id city) "&pxmax=" max-price "&naturebien=1,2,4&LISTING-LISTpg=" page)))
 
 (defn search [city max-price]
+  (log/info "Scrape listings for" city "with maximum price" max-price "...")
   (let [output-file-name (str (.format (java.text.SimpleDateFormat. "ddMMyyyy") (new java.util.Date)) "-" city "-" max-price "max.json")
         url (construct-seloger-url city max-price)]
     (for [page (range 1 (inc (get-number-of-pages url)))]
       (scrape-seloger-listings (construct-seloger-url city max-price page) output-file-name))))
 
+(def cli-options
+  [["-c" "--city" "Name of the city you want to search listings for."
+    :required true
+    :default "montpellier"
+    :parse-fn str
+    :validate [#(get-city-id %) (str "Must be one of these cities: " (string/join "," (keys cities)))]]
+   ["-m" "--max-price" "The Maximum price for the listings."
+    :required true
+    :default 50000
+    :parse-fn #(Integer/parseInt %)
+    :validate [#(< 0 %) "Must be greater than zero."]]])
+
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (let [{{city :city max-price :max-price} :options errors :errors} (parse-opts args cli-options)]
+    (if errors
+      (log/info errors)
+      (search city max-price))))
