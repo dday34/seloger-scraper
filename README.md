@@ -2,9 +2,16 @@
 
 A scraper for seloger.com
 
+## Todo
+
+- [ ] Command line interface
+- [ ] Find city id based on name (instead of hardcoded list)
+- [ ] Add apartment type
+- [ ] Add more information for each listing
+- [ ] Improve scraping speed
+
 ## Installation
 
-Download from http://example.com/FIXME.
 
 ## Usage
 
@@ -14,7 +21,3 @@ Download from http://example.com/FIXME.
 
 ## Examples
 
-## License
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
