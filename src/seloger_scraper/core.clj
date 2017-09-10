@@ -32,13 +32,13 @@
         1)))
 
 (defn get-listing-links [url]
-
-  (map get-link (html/select (html/html-resource (:body (fetch-url url))) [:div.title :a])))
+  (map get-link (html/select (html/html-resource (:body (fetch-url url))) [:a.c-pa-link])))
 
 (defn scrape-seloger-listings [url output-file-name]
   (let [listing-links (get-listing-links url)]
-    (log/info "start scraping " (count listing-links) " listings")
-    (map #(listing/scrape browser output-file-name %) listing-links)))
+    (log/info "Start scraping" (count listing-links) "listings")
+    (doseq [listing-link listing-links]
+      (listing/scrape browser output-file-name listing-link))))
 
 (def cities {"montpellier" "340172"})
 
@@ -55,7 +55,7 @@
   (log/info "Scrape listings for" city "with maximum price" max-price "...")
   (let [output-file-name (str (.format (java.text.SimpleDateFormat. "ddMMyyyy") (new java.util.Date)) "-" city "-" max-price "max.json")
         url (construct-seloger-url city max-price)]
-    (for [page (range 1 (inc (get-number-of-pages url)))]
+    (doseq [page (range 1 (inc (get-number-of-pages url)))]
       (scrape-seloger-listings (construct-seloger-url city max-price page) output-file-name))))
 
 (def cli-options
