@@ -23,4 +23,5 @@
   (let [{{city :city max-price :max-price} :options errors :errors} (parse-opts args cli-options)]
     (if errors
       (log/info errors)
-      (listings/search city max-price))))
+      (listings/search city max-price))
+    (System/exit 0)))
