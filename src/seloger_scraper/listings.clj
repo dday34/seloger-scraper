@@ -8,7 +8,8 @@
    [sparkledriver.core :refer [with-browser make-browser close-browser!]]
    [seloger-scraper.listing :as listing]))
 
-(def browser (make-browser))
+(when-not *compile-files*
+  (def browser (make-browser)))
 
 (defn- fetch-url [url]
   @(http/get url {:as :stream}))
