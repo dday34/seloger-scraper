@@ -18,7 +18,7 @@ Scrape accomodation listings on seloger.com
 
 ## Examples
 
-    java -jar ./target/uberjar/seloger-scraper-0.1.0-SNAPSHOT-standalone.jar -c montpellier -m 10000
+    java -jar ./target/uberjar/seloger-scraper-0.1.0-standalone.jar -c montpellier -m 10000
 
 ## Todo
 
