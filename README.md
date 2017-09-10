@@ -4,7 +4,7 @@ Scrape accomodation listings on seloger.com
 
 ## Installation
 
-`lein uberjar`
+    lein uberjar
 
 ## Usage
 
@@ -12,15 +12,13 @@ Scrape accomodation listings on seloger.com
 
 ## Options
 
-```
--c --city Name of the city you want to search accommodation in.
--m --max-price The Maximum selling price.
--h --help
-```
+    -c --city Name of the city you want to search accommodation in.
+    -m --max-price The Maximum selling price.
+    -h --help
 
 ## Examples
 
-`java -jar ./target/uberjar/seloger-scraper-0.1.0-SNAPSHOT-standalone.jar -c montpellier -m 10000`
+    java -jar ./target/uberjar/seloger-scraper-0.1.0-SNAPSHOT-standalone.jar -c montpellier -m 10000
 
 ## Todo
 
