@@ -4,7 +4,6 @@ A scraper for seloger.com
 
 ## Todo
 
-- [ ] Command line interface
 - [ ] Find city id based on name (instead of hardcoded list)
 - [ ] Add apartment type
 - [ ] Add more information for each listing
