@@ -20,13 +20,11 @@
 
 (defn -main
   [& args]
-  (let [{{city :city max-price :max-price help :help} :options errors :errors} (parse-opts args cli-options)]
+  (let [{{city :city max-price :max-price help :help} :options errors :errors summary :summary} (parse-opts args cli-options)]
     (cond
       errors (println errors)
-      help (println (string/join "\n" (cons
-                                       "Scrape accomodation listings on seloger.com"
-                                       (map #(->> %
-                                                  (take 3)
-                                                  (string/join " ")) cli-options))))
+      help (println (str
+                     "Scrape accomodation listings on seloger.com\n"
+                     summary))
       :else (listings/search city max-price))
     (System/exit 0)))
